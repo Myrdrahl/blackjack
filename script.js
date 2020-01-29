@@ -101,6 +101,10 @@ function dealCardToDealer (deck, numberOfCards) {
     dealerNumberOfCards = dealerCards.length
     dealerNumberOfCards -= 1
     deck.splice(dealerCard, 1)
+    let img = document.createElement('img')
+    let src = document.getElementById('dealerCardsZone')
+    img.src = dealerCards[(dealerCards.length - 1)].img
+    src.appendChild(img)
     numberOfCards -= 1
     dealerHandString.push(dealerCards[dealerNumberOfCards].value + ' of ' + dealerCards[dealerNumberOfCards].suit)
     dealerZone.innerText = dealerHandString
@@ -119,6 +123,10 @@ function dealCardToPlayer (deck, numberOfCards, playerHasAce) {
   playerNumberOfCards = playerCards.length
   playerNumberOfCards -= 1
   deck.splice(playerCard, 1)
+  let img = document.createElement('img')
+  let src = document.getElementById('playerCardsZone')
+  img.src = playerCards[(playerCards.length - 1)].img
+  src.appendChild(img)
   numberOfCards -= 1
   playerHandString.push(playerCards[playerNumberOfCards].value + ' of ' + playerCards[playerNumberOfCards].suit)
   playerZone.innerText = playerHandString
@@ -266,12 +274,21 @@ function printPlayerBet () {
   currentBet.innerText = 'Your current bet is: ' + bet
 }
 
+function cleanTable () {
+  let playerCardsZone = document.getElementById('playerCardsZone')
+  let dealerCardsZone = document.getElementById('dealerCardsZone')
+  console.log(playerCardsZone.value)
+  playerCardsZone.innerText = ''
+  dealerCardsZone.innerText = ''
+}
+
 // dealing initial cards and setting up game
 function startNewGame () {
   deck = createDeck()
   cleanVariables()
   cleanStatus()
   showButtons()
+  cleanTable()
   for (let playerHand = 0; playerHand <= 1; playerHand++) {
     // player
     playerCard = Math.floor(Math.random() * numberOfCards)
