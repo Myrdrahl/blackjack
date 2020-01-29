@@ -59,7 +59,6 @@ function createDeck () {
       card.img = imgBasePath + deck.indexOf(card) + '.png'
     }
   }
-  console.log(deck)
   return deck
 }
 function testDealersHand (sumOfDealerCards) {
@@ -70,7 +69,6 @@ function testDealersHand (sumOfDealerCards) {
   }
 
   if (sumOfDealerCards >= 16 && sumOfDealerCards < sumOfPlayerCards) {
-    console.log('Here!')
     status.innerText = 'You win!'
     calculatePlayerWinnings()
     hideButtons()
@@ -277,7 +275,6 @@ function printPlayerBet () {
 function cleanTable () {
   let playerCardsZone = document.getElementById('playerCardsZone')
   let dealerCardsZone = document.getElementById('dealerCardsZone')
-  console.log(playerCardsZone.value)
   playerCardsZone.innerText = ''
   dealerCardsZone.innerText = ''
 }
@@ -295,7 +292,6 @@ function startNewGame () {
     playerCards.push(deck[playerCard])
     // removing card from deck
     deck.splice(playerCard, 1)
-    console.log(playerCards[playerHand].img)
     let img = document.createElement('img')
     let src = document.getElementById('playerCardsZone')
     img.src = playerCards[playerHand].img
