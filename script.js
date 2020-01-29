@@ -33,6 +33,7 @@ let bet = null
 let winnings = null
 let inGame = null
 let currentBet = document.getElementById('currentBet')
+let imgBasePath = '../imgs/'
 // Creating a deck
 
 function createDeck () {
@@ -43,7 +44,8 @@ function createDeck () {
       let card = {
         suit: suits[suitIdx],
         value: values[valueIdx],
-        calc: values[valueIdx]
+        calc: values[valueIdx],
+        img: null
       }
       if (card.value === 'King' || card.value === 'Queen' || card.value === 'Jack') {
         card.calc = 10
@@ -53,8 +55,10 @@ function createDeck () {
         card.calc = card.value
       }
       deck.push(card)
+      card.img = imgBasePath + deck.indexOf(card) + '.png'
     }
   }
+  console.log(deck)
   return deck
 }
 function testDealersHand (sumOfDealerCards) {
