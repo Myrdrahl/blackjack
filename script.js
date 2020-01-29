@@ -34,6 +34,7 @@ let winnings = null
 let inGame = null
 let currentBet = document.getElementById('currentBet')
 let imgBasePath = '../imgs/'
+
 // Creating a deck
 
 function createDeck () {
@@ -277,12 +278,21 @@ function startNewGame () {
     playerCards.push(deck[playerCard])
     // removing card from deck
     deck.splice(playerCard, 1)
+    console.log(playerCards[playerHand].img)
+    let img = document.createElement('img')
+    let src = document.getElementById('playerCardsZone')
+    img.src = playerCards[playerHand].img
+    src.appendChild(img)
     numberOfCards -= 1
     // dealer
     dealerCard = Math.floor(Math.random() * numberOfCards)
     dealerCards.push(deck[dealerCard])
     // removing card from deck
     deck.splice(dealerCard, 1)
+    img = document.createElement('img')
+    src = document.getElementById('dealerCardsZone')
+    img.src = dealerCards[playerHand].img
+    src.appendChild(img)
     numberOfCards -= 1
 
     sumOfPlayerCards = calculatePlayerHand(playerCards)
@@ -293,7 +303,6 @@ function startNewGame () {
       playerHandString.push('Player has: ' + playerCards[0].value + ' of ' + playerCards[0].suit + ' and ' + playerCards[1].value + ' of ' + playerCards[1].suit)
       playerZone.innerText = playerHandString
       playerValue.innerText = sumOfPlayerCards
-
       // printing dealer
       dealerHandString.push('Dealer has: ' + dealerCards[0].value + ' of ' + dealerCards[0].suit + ' and ' + dealerCards[1].value + ' of ' + dealerCards[1].suit)
       // dealerHandString.push("Total value: " + sumOfDealerCards);
