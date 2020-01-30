@@ -34,6 +34,7 @@ let winnings = null
 let inGame = null
 let currentBet = document.getElementById('currentBet')
 let imgBasePath = '../imgs/'
+let splitButton = document.getElementById('split')
 
 // Creating a deck
 
@@ -72,10 +73,12 @@ function testDealersHand (sumOfDealerCards) {
     status.innerText = 'You win!'
     calculatePlayerWinnings()
     hideButtons()
+    showDeal()
   } else if (sumOfDealerCards > 16 && sumOfDealerCards > sumOfPlayerCards && sumOfDealerCards < 22) {
     status.innerText = 'You lose!'
     calculatePlayerLoss()
     hideButtons()
+    showDeal()
     return draw
   } else if (sumOfDealerCards < 16) {
     draw = 1
@@ -84,10 +87,12 @@ function testDealersHand (sumOfDealerCards) {
     status.innerText = 'Dealer busted, you win!'
     calculatePlayerWinnings()
     hideButtons()
+    showDeal()
   } else if (sumOfDealerCards >= 16 && sumOfDealerCards === sumOfPlayerCards) {
     status.innerText = 'It\'s a draw'
     playerMoney += bet
     hideButtons()
+    showDeal()
   }
 }
 
@@ -142,16 +147,19 @@ function calculatePlayerHand (playerCards, playerHasAce) {
     status.innerText = 'You win'
     calculatePlayerWinnings()
     hideButtons()
+    showDeal()
   } else if (sumOfPlayerCards > 21) {
     playerHasAce = checkPlayerForAces(playerCards, sumOfPlayerCards)
     if (playerHasAce === 0) {
       status.innerText = 'You\'ve busted'
       calculatePlayerLoss()
       hideButtons()
+      showDeal()
     } else if (playerHasAce === 1 && playerHadAce === 1) {
       status.innerText = 'You\'ve busted'
       calculatePlayerLoss()
       hideButtons()
+      showDeal()
     } else if (playerHasAce === 1) {
       playerCards = playerHasAceAndBusted(playerCards)
       sumOfPlayerCards = 0
@@ -228,13 +236,13 @@ function cleanStatus () {
 }
 
 function calculateWinningsFromBlackJack () {
-  winnings = (bet * 1.5)
+  winnings = (bet * 2.5)
   playerMoney += winnings
   return playerMoney
 }
 
 function calculateLossFromBlackJack () {
-  winnings = (bet * 1.5)
+  winnings = (bet * 2.5)
   playerMoney -= winnings
   return playerMoney
 }
@@ -245,16 +253,19 @@ function testForBlackJack () {
     playerMoney += bet
     hideButtons()
     printPlayerMoney()
+    showDeal()
   } else if (sumOfPlayerCards === 21) {
     status.innerText = 'Congrats! You have BlackJack'
     playerMoney = calculateWinningsFromBlackJack()
     hideButtons()
     printPlayerMoney()
+    showDeal()
   } else if (sumOfDealerCards === 21) {
     status.innerText = 'Dealer has BlackJack, you lose!'
     playerMoney = calculateLossFromBlackJack()
     hideButtons()
     printPlayerMoney()
+    showDeal()
   }
 }
 
@@ -271,12 +282,47 @@ function showButtons () {
 function printPlayerBet () {
   currentBet.innerText = 'Your current bet is: ' + bet
 }
+function showSplit () {
+  splitButton.style.visibility = 'visible'
+}
+
+function hideSplit () {
+  splitButton.style.visibility = 'hidden'
+}
 
 function cleanTable () {
   let playerCardsZone = document.getElementById('playerCardsZone')
   let dealerCardsZone = document.getElementById('dealerCardsZone')
   playerCardsZone.innerText = ''
   dealerCardsZone.innerText = ''
+}
+
+function checkMoneyBags () {
+  if (playerMoney === 0) {
+    console.log(playerMoney)
+    status.innerText = ' You have no more money!'
+  } else if (playerMoney < 0) {
+    status.innerText = 'You are now in debt, a kidney will be collected. Thanks for playing!'
+  }
+}
+
+function checkForSplit () {
+  if (playerCards[0].value === playerCards[1].value) {
+    console.log('Split')
+    showSplit()
+  }
+}
+
+function splitPlayerCards () {
+
+}
+
+function hideDeal () {
+  newGame.style.visibility = 'hidden'
+}
+
+function showDeal () {
+  newGame.style.visibility = 'visible'
 }
 
 // dealing initial cards and setting up game
@@ -286,6 +332,8 @@ function startNewGame () {
   cleanStatus()
   showButtons()
   cleanTable()
+  hideSplit()
+  hideDeal()
   for (let playerHand = 0; playerHand <= 1; playerHand++) {
     // player
     playerCard = Math.floor(Math.random() * numberOfCards)
@@ -312,6 +360,7 @@ function startNewGame () {
     sumOfDealerCards = calculateDealerHand(dealerCards)
     if (playerHand === 1) {
       testForBlackJack(sumOfPlayerCards, sumOfDealerCards)
+      checkForSplit()
       // printing player
       playerHandString.push('Player has: ' + playerCards[0].value + ' of ' + playerCards[0].suit + ' and ' + playerCards[1].value + ' of ' + playerCards[1].suit)
       playerZone.innerText = playerHandString
@@ -362,4 +411,9 @@ betButton.addEventListener('click', function () {
   playerMoney -= 50
   printPlayerMoney()
   printPlayerBet()
+  checkMoneyBags()
+})
+
+splitButton.addEventListener('click', function () {
+  splitPlayerCards()
 })
