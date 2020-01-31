@@ -70,13 +70,13 @@ function testDealersHand (sumOfDealerCards) {
   }
 
   if (sumOfDealerCards >= 16 && sumOfDealerCards < sumOfPlayerCards) {
-    status.innerText = 'You win!'
     calculatePlayerWinnings()
+    status.innerText = 'You win: ' + winnings
     hideButtons()
     showDeal()
   } else if (sumOfDealerCards > 16 && sumOfDealerCards > sumOfPlayerCards && sumOfDealerCards < 22) {
-    status.innerText = 'You lose!'
     calculatePlayerLoss()
+    status.innerText = 'You lose: ' + winnings
     hideButtons()
     showDeal()
     return draw
@@ -84,8 +84,9 @@ function testDealersHand (sumOfDealerCards) {
     draw = 1
     return draw
   } else if (sumOfDealerCards > 21) {
-    status.innerText = 'Dealer busted, you win!'
     calculatePlayerWinnings()
+    let winnings2 = winnings
+    status.innerText = 'Dealer busted! You win: ' + winnings2
     hideButtons()
     showDeal()
   } else if (sumOfDealerCards >= 16 && sumOfDealerCards === sumOfPlayerCards) {
@@ -94,6 +95,7 @@ function testDealersHand (sumOfDealerCards) {
     hideButtons()
     showDeal()
   }
+  resetWinningsAndBet()
 }
 
 function dealCardToDealer (deck, numberOfCards) {
@@ -144,20 +146,23 @@ function calculatePlayerHand (playerCards, playerHasAce) {
     sumOfPlayerCards += playerCards[i].calc
   }
   if (sumOfPlayerCards === 21) {
-    status.innerText = 'You win'
     calculatePlayerWinnings()
+    status.innerText = 'You won: ' + winnings
+    resetWinningsAndBet()
     hideButtons()
     showDeal()
   } else if (sumOfPlayerCards > 21) {
     playerHasAce = checkPlayerForAces(playerCards, sumOfPlayerCards)
     if (playerHasAce === 0) {
-      status.innerText = 'You\'ve busted'
       calculatePlayerLoss()
+      status.innerText = 'You\'ve busted and lost: ' + winnings
+      resetWinningsAndBet()
       hideButtons()
       showDeal()
     } else if (playerHasAce === 1 && playerHadAce === 1) {
-      status.innerText = 'You\'ve busted'
       calculatePlayerLoss()
+      status.innerText = 'You\'ve busted and lost: ' + winnings
+      resetWinningsAndBet()
       hideButtons()
       showDeal()
     } else if (playerHasAce === 1) {
@@ -175,14 +180,12 @@ function calculatePlayerHand (playerCards, playerHasAce) {
 function calculatePlayerWinnings () {
   winnings += (bet * 2)
   playerMoney += winnings
-  resetWinningsAndBet()
   printPlayerMoney()
   printPlayerBet()
 }
 
 function calculatePlayerLoss () {
   winnings += bet
-  resetWinningsAndBet()
   printPlayerMoney()
   printPlayerBet()
 }
@@ -238,13 +241,11 @@ function cleanStatus () {
 function calculateWinningsFromBlackJack () {
   winnings = (bet * 2.5)
   playerMoney += winnings
-  return playerMoney
 }
 
 function calculateLossFromBlackJack () {
   winnings = (bet * 2.5)
   playerMoney -= winnings
-  return playerMoney
 }
 
 function testForBlackJack () {
@@ -255,17 +256,23 @@ function testForBlackJack () {
     printPlayerMoney()
     showDeal()
   } else if (sumOfPlayerCards === 21) {
-    status.innerText = 'Congrats! You have BlackJack'
-    playerMoney = calculateWinningsFromBlackJack()
+    calculateWinningsFromBlackJack()
+    console.log(playerMoney)
+    console.log(winnings)
+    status.innerText = 'You have BlackJack! You won: ' + winnings
     hideButtons()
     printPlayerMoney()
     showDeal()
+    resetWinningsAndBet()
   } else if (sumOfDealerCards === 21) {
-    status.innerText = 'Dealer has BlackJack, you lose!'
-    playerMoney = calculateLossFromBlackJack()
+    calculateLossFromBlackJack()
+    console.log(playerMoney)
+    console.log(winnings)
+    status.innerText = 'Dealer has BlackJack! You lost: ' + winnings
     hideButtons()
     printPlayerMoney()
     showDeal()
+    resetWinningsAndBet()
   }
 }
 
@@ -399,7 +406,6 @@ stand.addEventListener('click', function () {
   while (sumOfDealerCards < 16) {
     dealCardToDealer(deck, numberOfCards, sumOfPlayerCards)
   }
-  testDealersHand()
 })
 
 function printPlayerMoney () {
